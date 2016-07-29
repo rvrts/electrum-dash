@@ -508,7 +508,9 @@ class MasternodeDialog(QDialog, PrintError):
             self.print_error(''.join(traceback.format_exception_only(err[0], err[1])))
             self.sign_announce_widget.sign_button.setEnabled(True)
 
-        util.WaitingDialog(self, _('Signing Masternode Announce...'), sign_thread, on_sign_successful, on_sign_error)
+        self.print_msg('Signing Masternode Announce message...')
+        self.manager.sign_announce(alias, pw)
+        # util.WaitingDialog(self, _('Signing Masternode Announce...'), sign_thread, on_sign_successful, on_sign_error)
 
 
     def send_announce(self, alias):
@@ -537,7 +539,8 @@ class MasternodeDialog(QDialog, PrintError):
             self.masternodes_widget.select_masternode(alias)
 
         self.print_msg('Sending Masternode Announce message...')
-        util.WaitingDialog(self, _('Broadcasting masternode...'), send_thread, on_send_successful, on_send_error)
+        self.manager.send_announce(alias)
+        # util.WaitingDialog(self, _('Broadcasting masternode...'), send_thread, on_send_successful, on_send_error)
 
     def create_vote_tab(self):
         self.proposals_widget = ProposalsWidget(self, self.gui.proposals_list.get_model())

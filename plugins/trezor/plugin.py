@@ -132,7 +132,9 @@ class TrezorCompatiblePlugin(HW_PluginBase):
 
     def get_client(self, wallet, force_pair=True):
         # All client interaction should not be in the main GUI thread
-        assert self.main_thread != threading.current_thread()
+        #assert self.main_thread != threading.current_thread()
+        self.print_msg(self.main_thread)
+        self.print_msg(threading.current_thread)
 
         devmgr = self.device_manager()
         client = devmgr.client_for_wallet(self, wallet, force_pair)

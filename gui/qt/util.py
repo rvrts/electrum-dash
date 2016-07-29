@@ -546,18 +546,27 @@ class TaskThread(QThread):
         while True:
             task = self.tasks.get()
             if not task:
+                print('No task. Stopping TaskThread.')
                 break
+            print('Retrieved task from queue.')
             try:
+                print('Running task...')
                 result = task.task()
+                print('Ran task without error.')
                 self.doneSig.emit(result, task.cb_done, task.cb_success)
-            except BaseException:
+            except BaseException as e:
+                print('Caught exception %s' % str(e))
+                print('Calling on_error() with exception info...')
                 self.doneSig.emit(sys.exc_info(), task.cb_done, task.cb_error)
 
     def on_done(self, result, cb_done, cb):
+        print('Determining which callback to call...')
         # This runs in the parent's thread.
         if cb_done:
+            print('    Calling on_done()')
             cb_done()
         if cb:
+            print('    Calling callback with result')
             cb(result)
 
     def stop(self):
